@@ -1,0 +1,19 @@
+{
+  "name": "shopit",
+  "version": "1.0.0",
+  "description": "MERN Ecommerce Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aarun1349/mern-ecomm-backend.git"
+  },
+  "author": "Arun Mahendra Sengar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aarun1349/mern-ecomm-backend/issues"
+  },
+  "homepage": "https://github.com/Aarun1349/mern-ecomm-backend#readme"
+}
