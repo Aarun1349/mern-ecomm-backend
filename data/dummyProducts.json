@@ -1,0 +1,20 @@
+[
+  {
+    "product_name": "Product_name",
+    "price": 1000,
+    "description": "Product description goes here",
+    "images": [],
+    "category": "Shoes",
+    "seller": "the seller",
+    "stocks": 5
+  },
+  {
+    "product_name": "Product_name two",
+    "price": 1000,
+    "description": "Product description goes here",
+    "images": [],
+    "category": "Shoes",
+    "seller": "the seller",
+    "stocks": 5
+  }
+]
