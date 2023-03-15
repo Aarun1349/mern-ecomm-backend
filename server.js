@@ -2,7 +2,6 @@ const app = require("./app");
 const connectToDatabase = require("./config/database");
 const dotenv = require("dotenv");
 
-
 // handle Unhandled Promise rejections
 process.on("uncaughtExceptions", (err) => {
   console.log(`ERROR: ${err.message}`);

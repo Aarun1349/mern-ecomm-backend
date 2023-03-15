@@ -4,12 +4,12 @@ const productSchema = new mongoose.Schema({
   product_name: {
     type: String,
     required: [true, "Please Provide the product name"],
-    maxLenght: [100, " Please provide a product name with in 100 characters"],
+    maxLength: [100, " Please provide a product name with in 100 characters"],
   },
   price: {
     type: Number,
     required: [true, "Please Provide the product price"],
-    maxLenght: [5, " Please provide a product price with in 100 characters"],
+    maxLength: [5, " Please provide a product price with in 100 characters"],
     default: 0.0,
   },
   description: {
@@ -50,7 +50,7 @@ const productSchema = new mongoose.Schema({
   stocks: {
     type: Number,
     required: true,
-    maxLenght: [5, " Please provide a product stock with in 5 characters"],
+    maxLength: [5, " Please provide a product stock with in 5 characters"],
     default: 0,
   },
   noOfReviews: { type: Number, default: 0 },
