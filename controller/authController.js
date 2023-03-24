@@ -105,13 +105,14 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("user not found with this email", 404));
   }
   // get reset token
-  const resetToken = user.generatePasswordResetToken();
+  const resetToken = await  user.generatePasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
   //create reset password url
   const resetUrl = `${req.protocol}://${req.get(
     "host"
   )}/api/v1/reset/${resetToken}`;
+
   const message = `your password reset token is as follow :\n\n${resetUrl}\n\nIf you have not requested this eamil,then ignore it`;
   try {
     await sendEmail({
