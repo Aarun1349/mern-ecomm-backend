@@ -9,10 +9,12 @@ app.use(cookieParser());
 //Import all products
 const products = require("./route/productRoute");
 const auth = require("./route/authRoute");
+const order = require("./route/orderRoute");
 
 //middleware to handle routes errors
 app.use(errorMiddleware);
 
 app.use("/api/v1", products);
 app.use("/api/v1", auth);
+app.use("/api/v1", order);
 module.exports = app;

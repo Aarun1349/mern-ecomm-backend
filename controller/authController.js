@@ -4,6 +4,7 @@ const catchAsyncError = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmails");
 const crypto = require("crypto");
+
 // Register a new user => /api/v1/register
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -29,19 +30,6 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
   //     token,
   //     newUser,
   //   });
-});
-
-exports.deleteUser = catchAsyncError(async (req, res, next) => {
-  let user = await User.findByIdAndDelete(req.params.id);
-  if (!user) {
-    return next(new ErrorHandler("User not found", 404));
-  }
-  await User.deleteOne();
-
-  res.status(201).json({
-    success: true,
-    message: "User deleted successfully",
-  });
 });
 
 // update user details => /api/v1/user/:id
@@ -167,11 +155,112 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
+//Get currently logged in user profile => /api/v1/me
+exports.getUserProfile = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.body.id);
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// change password => /api/v1/password/update
+exports.updatePassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  //check previous user password
+  const isMatched = await User.comparePassword(req.body.oldPassword);
+  if (!isMatched) {
+    return next(new ErrorHandler("Old password is incorrect", 400));
+  }
+
+  user.password = req.body.newPassword;
+  user.save();
+  sendToken(user, 200, res);
+});
+
+// change password => /api/v1/me/update
+exports.updateProfile = catchAsyncError(async (req, res, next) => {
+  const updatedData = { name: req.body.name, email: req.body.email };
+  const user = await User.findByIdAndUpdate(req.user.id, updatedData, {
+    new: true,
+    validateBeforeSave: true,
+    useFindAndUpdate: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+  //update avatar : TODO
+  //check previous user password
+  // const isMatched = await User.comparePassword(req.body.oldPassword);
+  // if (!isMatched) {
+  //   return next(new ErrorHandler("Old password is incorrect", 400));
+  // }
+
+  // user.password = req.body.newPassword;
+  // user.save();
+  // sendToken(user, 200, res);
+});
+
 // Logout user => /api/v1/logout
 exports.logout = catchAsyncError(async (req, res, next) => {
   res.cookie("token", null, { expires: new Date(Date.now()), httpOnly: true });
   res.status(200).json({
     success: true,
     message: "User logout successfully",
+  });
+});
+
+// Get all users = > api/v1/admin/users
+exports.getAllUsers = catchAsyncError(async (req, res, next) => {
+  const users = await User.find().select("email");
+  res.status(200).json({
+    success: true,
+    records: users.length,
+    data: users,
+  });
+});
+
+// Get specific user = > api/v1/admin/user
+exports.getUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new ErrorHandler("No user found", 404));
+  }
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+// update user profile from admin => /api/v1/admin/updateuser
+exports.updateUserByAdmin = catchAsyncError(async (req, res, next) => {
+  const updatedData = { name: req.body.name, email: req.body.email };
+  const user = await User.findByIdAndUpdate(req.params.id, updatedData, {
+    new: true,
+    validateBeforeSave: true,
+    useFindAndUpdate: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// delete user from admin=> /api/v1/admin/user/:id
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
+  let user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  await User.deleteOne();
+
+  res.status(201).json({
+    success: true,
+    message: "User deleted successfully",
   });
 });
