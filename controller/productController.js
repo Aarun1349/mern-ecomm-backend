@@ -5,7 +5,8 @@ const APIFeatures = require("../utils/apifeatures");
 
 // Get all products => api/v1/products?keyword=apple
 exports.getProducts = catchAsyncErrors(async (req, res, next) => {
-  const resPerPage = 4;
+  // return next(new ErrorHandler('Error while',400));
+  const resPerPage = 8;
   const productCount = await Products.countDocuments();
   const apiFeatures = new APIFeatures(Products.find(), req.query)
     .search()
@@ -15,12 +16,17 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   if (products.length === 0) {
     return next(new ErrorHandler("No products are available", 404));
   }
-  res.status(200).json({
-    success: true,
-    result: products.length,
-    productCount,
-    data: products,
-  });
+
+  setTimeout(() => {
+    
+    res.status(200).json({
+      success: true,
+      result: products.length,
+      productCount,
+      resPerPage,
+      data: products,
+    });
+  }, 500);
 });
 
 // Get  product by id => api/v1/product/:id

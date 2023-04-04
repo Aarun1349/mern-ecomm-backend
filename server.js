@@ -21,12 +21,14 @@ dotenv.config({ path: "./config/config.env" });
 //Connecting to database
 connectToDatabase();
 
-const server = app.listen(process.env.PORT || 8000, () => {
+const server = app.listen((process.env.PORT || 8000) , () => {
   console.log(
     `Server is started on PORT:${process.env.PORT} in ${process.env.NODE_ENV}`
   );
 });
 
+// proxy.web(req, res, { target: 'http://localhost:8000' });
+// }).listen(4000);
 // handle Unhandled Promise rejections
 process.on("unhandledRejection", (err) => {
   console.log(`ERROR: ${err.message}`);
